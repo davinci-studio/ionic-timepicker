@@ -7,8 +7,8 @@
   angular.module('ionic-timepicker')
     .directive('ionicTimepicker', ionicTimepicker);
 
-  ionicTimepicker.$inject = ['$ionicPopup'];
-  function ionicTimepicker($ionicPopup) {
+  ionicTimepicker.$inject = ['$ionicPopup', '$interval'];
+  function ionicTimepicker($ionicPopup, $interval) {
     return {
       restrict: 'AE',
       replace: true,
@@ -33,7 +33,7 @@
         scope.time = {hours: 0, minutes: 0, meridian: ""};
         var objDate = new Date(obj.epochTime * 1000);       // Epoch time in milliseconds.
 
-        var interval = null;
+        var intervalPromise = null;
         var maxHours = scope.format;
 
         var oldTime = {
@@ -56,7 +56,7 @@
           }
           scope.time.hours = (scope.time.hours < 10) ? ('0' + scope.time.hours) : scope.time.hours;
 
-          this.parseHours();
+          scope.parseHours();
         };
 
         //Decreasing the hours
@@ -74,7 +74,7 @@
           }
           scope.time.hours = (scope.time.hours < 10) ? ('0' + scope.time.hours) : scope.time.hours;
 
-          this.parseHours();
+          scope.parseHours();
         };
 
         //Increasing the minutes
@@ -83,7 +83,7 @@
           scope.time.minutes = (scope.time.minutes + obj.step) % 60;
           scope.time.minutes = (scope.time.minutes < 10) ? ('0' + scope.time.minutes) : scope.time.minutes;
 
-          this.parseMinutes();
+          scope.parseMinutes();
         };
 
         //Decreasing the minutes
@@ -92,7 +92,7 @@
           scope.time.minutes = (scope.time.minutes + (60 - obj.step)) % 60;
           scope.time.minutes = (scope.time.minutes < 10) ? ('0' + scope.time.minutes) : scope.time.minutes;
 
-          this.parseMinutes();
+          scope.parseMinutes();
         };
 
         //Changing the meridian
@@ -101,18 +101,17 @@
         };
 
         scope.startAutoIncrement = function(incrementFn) {
-          if (interval) {return;}
-          interval = setInterval(function () {
-            scope.$apply(function () {
-              incrementFn();
-            });
-          }, 50);
+          if (intervalPromise) {
+            return;
+          }
+
+          intervalPromise = $interval(incrementFn, 50);
         };
 
         scope.stopAutoIncrement = function () {
-          if (interval) {
-            window.clearInterval(interval);
-            interval = null;
+          if (intervalPromise) {
+            $interval.cancel(intervalPromise);
+            intervalPromise = null;
           }
         };
 
@@ -149,9 +148,6 @@
         }
 
         function validateNumber(oldValue, newValue, minValue, maxValue) {
-          if (newValue === maxValue) {
-            return minValue;
-          }
           if (newValue === '') {
             return newValue;
           }
@@ -160,6 +156,9 @@
           }
 
           newValue = parseInt(newValue);
+          if (newValue === maxValue) {
+            return minValue;
+          }
           if (newValue >= minValue && newValue <= maxValue) {
             return newValue;
           }
