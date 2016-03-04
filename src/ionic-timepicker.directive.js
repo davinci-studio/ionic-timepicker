@@ -36,12 +36,11 @@
 
         var interval = null;
         var maxHours = scope.format;
-        console.log('MaxHour', maxHours);
+
         var oldTime = {
             hours: 0,
             minutes: 0
-        }
-
+        };
 
         //Increasing the hours
         scope.increaseHours = function () {
@@ -103,76 +102,71 @@
         };
 
         scope.startAutoIncrement = function(incrementFn) {
-            if (interval) {return;}
-            interval = setInterval(function () {
-                scope.$apply(function () {
-                    incrementFn();
-                });
-            }, 50);
-        }
+          if (interval) {return;}
+          interval = setInterval(function () {
+            scope.$apply(function () {
+              incrementFn();
+            });
+          }, 50);
+        };
 
         scope.stopAutoIncrement = function () {
-            if (interval) {
-                window.clearInterval(interval);
-                interval = null;
-            }
-        }
+          if (interval) {
+            window.clearInterval(interval);
+            interval = null;
+          }
+        };
 
         scope.parseHours = function() {
-  	        if (parseInt(scope.time.hours) === scope.format) {
-    	            scope.time.hours = 0;
-            }
-
-            scope.time.hours = validateNumber(oldTime.hours, scope.time.hours, 0, maxHours);
-            oldTime.hours = scope.time.hours;
-  	        scope.time.hours = parseTimeNumber(scope.time.hours);
-        }
+          scope.time.hours = validateNumber(oldTime.hours, scope.time.hours, 0, maxHours);
+          oldTime.hours = scope.time.hours;
+          scope.time.hours = parseTimeNumber(scope.time.hours);
+        };
 
         scope.parseMinutes = function() {
-            if (parseInt(scope.time.minutes) === 60) {
-    	            scope.time.minutes = 0;
-            }
-
-            scope.time.minutes = validateNumber(oldTime.minutes, scope.time.minutes, 0, 60);
-            oldTime.minutes = scope.time.minutes;
-          	scope.time.minutes = parseTimeNumber(scope.time.minutes);
-        }
+          scope.time.minutes = validateNumber(oldTime.minutes, scope.time.minutes, 0, 60);
+          oldTime.minutes = scope.time.minutes;
+          scope.time.minutes = parseTimeNumber(scope.time.minutes);
+        };
 
         scope.incHours = function () {
-          	if (scope.time.hours >= maxHours) {
-            	scope.time.hours = 0;
-            } else {
-          		scope.time.hours = ++scope.time.hours;
-            }
+          if (scope.time.hours >= maxHours) {
+            scope.time.hours = 0;
+          } else {
+            scope.time.hours = ++scope.time.hours;
+          }
 
-        	   scope.parseHours();
-        }
+          scope.parseHours();
+        };
 
         function parseTimeNumber(value) {
-          	value = (parseInt(value) || '').toString();
+          value = (parseInt(value) || '').toString();
 
-        		while (value.length < 2) {
-            	value = '0' + value;
-            }
+          while (value.length < 2) {
+            value = '0' + value;
+          }
 
-            return value;
+          return value;
         }
 
         function validateNumber(oldValue, newValue, minValue, maxValue) {
-          	if (newValue === '') {
-            	return newValue;
-            }
-          	if (isNaN(newValue)) {
-            	return oldValue;
-            }
-
-        		newValue = parseInt(newValue);
-            if (newValue >= minValue && newValue <= maxValue) {
-            	return newValue;
-            }
-
+          if (newValue === maxValue) {
+            return minValue;
+          }
+          if (newValue === '') {
+            return newValue;
+          }
+          if (isNaN(newValue)) {
             return oldValue;
-         }
+          }
+
+          newValue = parseInt(newValue);
+          if (newValue >= minValue && newValue <= maxValue) {
+            return newValue;
+          }
+
+          return oldValue;
+        }
 
         //onclick of the button
         element.on("click", function () {
