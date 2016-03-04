@@ -17,7 +17,6 @@
       },
       link: function (scope, element, attrs) {
 
-        var today = new Date();
         var currentEpoch = ((new Date()).getHours() * 60 * 60) + ((new Date()).getMinutes() * 60);
 
         //set up base variables and options for customization
@@ -38,8 +37,8 @@
         var maxHours = scope.format;
 
         var oldTime = {
-            hours: 0,
-            minutes: 0
+          hours: 0,
+          minutes: 0
         };
 
         //Increasing the hours
