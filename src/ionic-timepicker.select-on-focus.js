@@ -13,7 +13,6 @@
             },
             require: 'ngModel',
             link: function (scope, element, attributes, controller) {
-                console.log('directive init');
                 var focused = false;
                 var SWITCH_EVENT = 'FIELD_SWITCHED';
                 var maxLength = Number(attributes.maxlength) || 0;
@@ -22,12 +21,10 @@
                     elem.setSelectionRange(0, elem.value.length);
                 }
                 function focusHandler() {
-                    console.log('focused');
                     focused = true;
                     $timeout(elementSelectAll, 0, false, this);
                 }
                 function blurHandler() {
-                    console.log('blured');
                     focused = false;
                     while (maxLength && getValue().length < maxLength) {
                         controller.$setViewValue('0' + controller.$viewValue);
