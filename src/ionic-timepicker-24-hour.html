@@ -11,10 +11,14 @@
                 <i class="icon ion-chevron-up"></i>
             </button>
             <input
+                id="hours"
                 ng-model="time.hours"
                 ng-change="parseHours()"
+                select-on-focus
+                next-field="minutes"
                 type="tel"
                 class="ipBoxes timePickerBoxText"
+                maxlength="2"
             >
             <button
                 ng-click="decreaseHours()"
@@ -38,10 +42,14 @@
                 <i class="icon ion-chevron-up"></i>
             </button>
             <input
+                id="minutes"
                 ng-model="time.minutes"
                 ng-change="parseMinutes()"
+                select-on-focus
+                next-field="hours"
                 type="tel"
                 class="ipBoxes timePickerBoxText"
+                maxlength="2"
             >
             <button
                 ng-click="decreaseMinutes()"
