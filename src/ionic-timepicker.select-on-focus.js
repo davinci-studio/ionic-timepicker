@@ -7,7 +7,7 @@
   angular.module('ionic-timepicker')
     .directive('selectOnFocus', selectOnFocus);
 
-  ionicTimepicker.$inject = ['$timeout'];
+  selectOnFocus.$inject = ['$timeout'];
   function selectOnFocus($timeout) {
       return {
           	restrict: 'A',
